@@ -1,93 +1,93 @@
-#Класс Station (Станция):
-# Имеет название, которое указывается при ее создании
-# Может принимать поезда (по одному за раз)
-# Может возвращать список всех поездов на станции, находящиеся в текущий момент
-# Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
-# Может отправлять поезда (по одному за раз, при этом, поезд удаляется из списка поездов,
-# находящихся на станции).
-#
-# Класс Route (Маршрут):
-# Имеет начальную и конечную станцию, а также список промежуточных станций. Начальная и конечная станции
-# указываютсся при создании маршрута, а промежуточные могут добавляться между ними.
-# Может добавлять промежуточную станцию в список
-# Может удалять промежуточную станцию из списка
-# Может выводить список всех станций по-порядку от начальной до конечной
-#
-# Класс Train (Поезд):
-# Имеет номер (произвольная строка) и тип (грузовой, пассажирский) и количество вагонов, эти данные
-# указываются при создании экземпляра класса
-# Может набирать скорость
-# Может возвращать текущую скорость
-# Может тормозить (сбрасывать скорость до нуля)
-# Может возвращать количество вагонов
-# Может прицеплять/отцеплять вагоны (по одному вагону за операцию, метод просто увеличивает или уменьшает
-# количество вагонов). Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
-# Может принимать маршрут следования (объект класса Route).
-# При назначении маршрута поезду, поезд автоматически помещается на первую станцию в маршруте.
-# Может перемещаться между станциями, указанными в маршруте. Перемещение возможно вперед и назад,
-# но только на 1 станцию за раз.
-# Возвращать предыдущую станцию, текущую, следующую, на основе маршрута
-
 class Station
-
-  attr_accessor :speed
-
-  def initialize(name)
-    @name = name
+  attr_accessor :trains
+  def initialize(station_name)
+    @station_name = station_name
+  end
+  def add_train(train_number)
+    @trains << train_number
+  end
+  def show_trains
+    @trains.each { |train| puts train.train_number }
+  end
+  def show_trains_type
+    i = 0
+    y = 0
+    @trains.each do |train|
+      if train.type == "грузовой"
+        i += 1
+      else
+        y += 1
+      end
+      puts train.type
+    end
+    puts "Количество грузовых поездов #{i}"
+    puts "Количество пассажирских поездов #{y}"
   end
 end
 
 class Route
+  attr_accessor :stations
   def initialize(first_station, last_station)
     @first_station = first_station
     @last_station = last_station
-    @stations = [first_station, last_station]
+    @stations = [@first_station, @last_station]
+
   end
-  def new_station
-    puts "Номер станции: "
-    i = gets.chomp.to_i
-    puts "Введите новую станцию: "
-    @stations[i-1] << gets.chomp
-    puts "Станция добавлена!"
+=begin
+  def add_station(station)
+    self.stations = self.stations.delete(-1)
+    self.stations << station << @last_station
+    puts self.stations
   end
-  def delete_station
-    puts "Номер станции, которую Вы хотите удалить: "
-    i = gets.chomp.to_i
-    @stations.delete(i-1)
-    puts "Станция удалена!"
-  end
-  def station_list
+=end
+  def delete_station(station)
+    @stations.delete(station)
     puts @stations
+  end
+
+  def stations
+    @stations.each { |value| puts value }
   end
 end
 
 class Train
-  def initialize(speed = 0, number, type, wagons)
-    @number = number
+  attr_reader  :type
+  attr_accessor :speed, :train_number, :number_of_wagons
+  def initialize(speed = 0, train_number, type, number_of_wagons)
+    @train_number = train_number
     @type = type
-    @wagons = wagons
+    @number_of_wagons = number_of_wagons
     @speed = speed
   end
-  def up_speed
-    puts "На сколько Вы хотите увеличеть скорость"
-    up = gets.chomp.to_i
-    self.speed += up
+  def up_speed(s)
+    self.speed += s
   end
-  def current_speed
-    @speed
+  def speed
+    puts self.speed
   end
   def stop
     self.speed = 0
   end
-  def count_of_wagons
-    @wagons
+  def number_of_wagons
+    self.number_of_wagons
   end
+  def hitch_unhitch_wagon(s)
+    if self.speed == 0
+      self.number_of_wagons += s  #если число будет отрицательным количество уменьшится
+    else
+      puts "Невозможно, поезд движется!"
+    end
+  end
+  def route
+    #route = @stations
+    #puts route
+  end
+  def location
 
-  my_route = Route.new("Академическая", "Лесная")
-  list = my_route.station_list
-  puts list
-
-
+  end
 end
-
-
+new_station = Route.new("академическая", "лесная")
+new_station.stations
+new_station.add_station("мужество")
+new_route = Train.new("3819", "грузовой", 3)
+#new_route.route
