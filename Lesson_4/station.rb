@@ -1,8 +1,9 @@
 class Station
-  attr_accessor :trains
+  attr_accessor :trains, :station_name
 
   def initialize(station_name)
     @station_name = station_name
+    @trains = []
   end
 
   def add_train(train_number)

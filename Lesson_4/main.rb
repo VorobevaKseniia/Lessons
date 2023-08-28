@@ -3,6 +3,13 @@ require_relative 'route'
 require_relative 'train'
 
 class Menu
+  def initialize
+    @stations = []
+    @trains = []
+    @routes = []
+    @wagons = []
+
+  end
 
   def open_menu
     puts "Введите цифру от 1 до 8"
@@ -25,7 +32,7 @@ class Menu
     when 3
       create_new_route
     when 4
-      add_new_route
+      assign_route
     when 5
       add_wagon
     when 6
@@ -40,105 +47,133 @@ class Menu
   end
 
   def create_station
-    create_station = Route.new(first_station, last_station)
     print "Введите название станции: "
     name_station = gets.chomp
-    create_station.add_station(name_station)
+    new_station = Station.new(name_station)
+    @stations << new_station
+    print "Станция #{new_station} создана!"
   end
 
   def create_train
     puts "Введите номер поезда: "
     train_number = gets.chomp
     puts "Введите тип поезда (1 - пассажирский, 2 - грузовой): "
-    type = gets.chomp
-    puts "Введите количество вагонов: "
-    number_of_wagons = gets.chomp.to_i
-    create_train = Train.new(train_number, type, number_of_wagons)
-    trains << create_train
-    puts "Поезд номер #{train_number} создан"
+    type = gets.chomp.to_i
+    case type
+    when 1
+      passenger_train = PassengerTrain.new(train_number)
+      @trains << passenger_train
+      puts "Пассажирский поезд номер #{train_number} создан"
+    when 2
+      cargo_train = CargoTrain.new(train_number)
+      @trains << cargo_train
+      puts "Грузовой поезд номер #{train_number} создан"
+    else
+      print "Error!"
+    end
   end
 
   def create_new_route
     puts "Начальная станция: "
-    first_station = gets.chomp
+    first_station = Station.new(gets.chomp)
     puts "Конечная станция: "
-    last_station = gets.chomp
+    last_station = Station.new(gets.chomp)
     new_route = Route.new(first_station,last_station)
-    puts "Добавить станцию - 1\n Удалить станцию - 2"
+    loop do
+    puts "Добавить станцию - 1\n Удалить станцию - 2\n Выход - 0"
     add_or_delete = gets.chomp.to_i
     case add_or_delete
     when 1
-      "Введите название станции"
+      puts "Введите название станции"
       station = gets.chomp
-      new_route.add_station(station)
+      new_route.add_station Station.new(station)
     when 2
-      "Введите название станции"
+      puts "Введите название станции"
       station = gets.chomp
-      new_route.delete_station(station)
+      new_route.delete_station Station.new(station)
     else
       print "Error!"
+    end
+    break if add_or_delete == 0
+    end
+    @routes << new_route
+  end
+
+  def assign_route
+    all_routes
+    all_trains
+    train = get_train
+    print "Введите номер маршрута: "
+    route_number = gets.chomp.to_i
+    train.assign_route(@routes[route_number - 1])  # по индексу
+  end
+
+  def get_train  # поиск и вывод поезда
+    print "Введите номер поезда: "
+    train_number = gets.chomp
+    @trains.find { |train| train.train_number == train_number }
+  end
+
+  def all_routes
+    puts "Список маршрутов"
+    @routes.each_with_index do |route, index|
+      puts "#{index+1}. #{route.first_station} - #{route.last_station}"
     end
   end
 
-  def add_new_route
-    puts "Введите номер поезда: "
-    train_number = gets.chomp
-    puts "Введите тип поезда (1 - пассажирский, 2 - грузовой): "
-    type = gets.chomp
-    case type
-    when 1
-      type = "пассажирский"
-    when 2
-      type = "грузовой"
-    else
-      print "Error!"
-    end
-    puts "Введите количество вагонов: "
-    number_of_wagons = gets.chomp.to_i
-    new_route = Train.new(train_number, type, number_of_wagons)
-    puts "Введите номер маршрута: "
-    route = gets.chomp
-    new_route.assign_route(route)
+  def all_trains
+    puts "Список поездов"
+    @trains.each { |train| puts train.train_number}
   end
 
   def add_wagon
-    puts "Введите название станции, на которой находится поезд: "
-    station = gets.chomp
+    all_trains
     puts "Введите номер поезда: "
     train_number = gets.chomp
-    carriage = Station.new(station)
-    carriage.hitch_wagon if train_number.include? trains
+    train = @trains.find { |train| train.train_number == train_number }
+
+    if train.is_a? CargoTrain # принадлежит ли объект к классу или его подклассу? (kind_of, instance_of)
+      train.hitch_wagon CargoWagons.new
+    elsif train.is_a? PassengerTrain
+      train.hitch_wagon PassengerWagons.new
+    else "Error!"
+    end
     print "Вагон прицеплен!"
   end
 
   def delete_wagon
-    puts "Введите название станции, на которой находится поезд: "
-    station = gets.chomp
+    all_trains
     puts "Введите номер поезда: "
     train_number = gets.chomp
-    carriage = Station.new(station)
-    carriage.unhitch_wagon if train_number.include? trains
+    train = @trains.find { |train| train.train_number == train_number }
+
+    if train.is_a? CargoTrain
+      train.unhitch_wagon CargoWagons.new
+    elsif train.is_a? PassengerTrain
+      train.unhitch_wagon PassengerWagons.new
+    else "Error!"
+    end
     print "Вагон отцеплен!"
   end
 
   def move_next_previous_station
     puts "Следующая станция - 1\n Предыдущая станция - 2"
-    choice_1 = gets.chomp.to_i
-    case choice_1
+    next_previous = gets.chomp.to_i
+    case next_previous
     when 1
       puts "Введите название станции, на которой находится поезд: "
       station = gets.chomp
       puts "Введите номер поезда: "
       train_number = gets.chomp
       go_next = Station.new(station)
-      go_next.next_station if train_number.include? trains
+      go_next.go_next_station if train_number.include? trains && next_station
     when 2
       puts "Введите название станции, на которой находится поезд: "
       station = gets.chomp
       puts "Введите номер поезда: "
       train_number = gets.chomp
-      go_next = Station.new(station)
-      go_next.previous_station if train_number.include? trains
+      go_previous = Station.new(station)
+      go_previous.go_previous_station if train_number.include? trains && previous_station
     else
       print "Error!"
     end
