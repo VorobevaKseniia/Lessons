@@ -1,6 +1,11 @@
 require_relative 'station'
 require_relative 'route'
 require_relative 'train'
+require_relative 'passenger_train'
+require_relative 'cargo_train'
+require_relative 'passenger_wagons'
+require_relative 'cargo_wagons'
+require_relative 'wagons'
 
 class Menu
   def initialize
@@ -12,37 +17,45 @@ class Menu
   end
 
   def open_menu
-    puts "Введите цифру от 1 до 8"
-    puts "1. Создать станцию"
-    puts "2. Создать поезд"
-    puts "3. Создать маршрут и управлять станциями в нем (добавлять, удалять)"
-    puts "4. Назначить маршрут поезду"
-    puts "5. Добавить вагон к поезду"
-    puts "6. Отцепить вагон от поезда"
-    puts "7. Переместить поезд по маршруту вперед и назад"
-    puts "8. Просмотреть список станций и список поездов на станции"
+    loop do
+      puts "Введите цифру от 1 до 8"
+      puts "1. Создать станцию"
+      puts "2. Создать поезд"
+      puts "3. Создать маршрут и управлять станциями в нем (добавлять, удалять)"
+      puts "4. Назначить маршрут поезду"
+      puts "5. Добавить вагон к поезду"
+      puts "6. Отцепить вагон от поезда"
+      puts "7. Переместить поезд по маршруту вперед и назад"
+      puts "8. Просмотреть список станций и список поездов на станции"
+      puts "9. Выход"
+      puts "10. Отладка"
 
-    choice = gets.chomp.to_i
+      choice = gets.chomp.to_i
 
-    case choice
-    when 1
-      create_station
-    when 2
-      create_train
-    when 3
-      create_new_route
-    when 4
-      assign_route
-    when 5
-      add_wagon
-    when 6
-      delete_wagon
-    when 7
-      move_next_previous_station
-    when 8
-      show_station_list_and_trains
-    else
-    puts "Error!"
+      case choice
+      when 1
+        create_station
+      when 2
+        create_train
+      when 3
+        create_new_route
+      when 4
+        assign_route
+      when 5
+        add_wagon
+      when 6
+        delete_wagon
+      when 7
+        move_next_previous_station
+      when 8
+        show_station_list_and_trains
+      when 9
+        break
+      when 10
+        show
+      else
+      puts "Error!"
+      end
     end
   end
 
@@ -185,6 +198,13 @@ class Menu
     current_station = Station.new(name_station)
     puts current_station.stations
     puts current_station.trains
+  end
+
+  def show
+    p @stations
+    p @trains
+    p @routes
+    p @wagons
   end
 
 end

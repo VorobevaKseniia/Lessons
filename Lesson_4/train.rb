@@ -2,10 +2,10 @@ class Train
   attr_reader  :type, :train_number
   attr_accessor :speed, :wagons
 
-  def initialize(speed = 0, train_number)
+  def initialize(train_number)
     @train_number = train_number
     @wagons = []
-    @speed = speed
+    @speed = 0
   end
 
   def up_speed(s)
