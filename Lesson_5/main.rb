@@ -13,7 +13,7 @@ class Menu
   def initialize
     @@stations ||= []
     @@trains = []
-    @routes = []
+    @routes ||= []
     @wagons = []
   end
 
@@ -119,7 +119,7 @@ class Menu
     train = get_train
     print "Введите номер маршрута: "
     route_number = gets.chomp.to_i
-    train.(@routes[route_number - 1])
+    train.assign_route(route_number)
   end
 
   def get_train  # поиск и вывод поезда
@@ -131,7 +131,7 @@ class Menu
   def all_routes
     puts "Список маршрутов"
     @routes.each_with_index do |route, index|
-      puts "#{index+1}. #{route.first_station.to_s} - #{route.last_station.to_s}"
+      puts "#{index+1}. #{route.first_station} - #{route.last_station}"
     end
   end
 
@@ -141,8 +141,8 @@ class Menu
   end
 
   def all_stations
-    puts "Список поездов"
-    @@stations.each { |station| puts station.name}
+    puts "Список станций"
+    @@stations.each { |station| puts station.station_name}
   end
 
   def add_wagon
@@ -208,8 +208,8 @@ class Menu
   end
 
   def show
-    p @stations
-    p @trains
+    p @@stations
+    p @@trains
     p @routes
     p @wagons
   end

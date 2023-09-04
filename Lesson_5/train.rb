@@ -3,8 +3,8 @@ require_relative 'modules'
 class Train
   include Manufacturer
   include InstanceCounter
-  attr_reader  :type, :number, :wagons, :route
-  attr_accessor :speed, :trains
+  attr_reader  :type, :number
+  attr_accessor :speed, :trains, :wagons, :route
 
   @@trains = []
 
@@ -45,7 +45,7 @@ class Train
   def assign_route(route)
     @route = route
     @current_station_index = 0
-    route.stations[0].add_train(self)
+    @route.first_station.add_train(self)
   end
 
   def go_next_station
