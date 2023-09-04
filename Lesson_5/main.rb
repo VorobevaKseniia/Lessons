@@ -9,9 +9,10 @@ require_relative 'cargo_wagons'
 require_relative 'wagons'
 
 class Menu
+  attr_accessor :stations, :trains, :routes
   def initialize
-    @stations = []
-    @trains = []
+    @@stations ||= []
+    @@trains = []
     @routes = []
     @wagons = []
   end
@@ -63,8 +64,8 @@ class Menu
     print "Введите название станции: "
     name_station = gets.chomp
     new_station = Station.new(name_station)
-    @stations << new_station
-    print "Станция #{new_station} создана!"
+    @@stations << new_station
+    puts "Станция #{new_station.to_s} создана!"
   end
 
   def create_train
@@ -75,11 +76,11 @@ class Menu
     case type
     when 1
       passenger_train = PassengerTrain.new(number)
-      @trains << passenger_train
+      @@trains << passenger_train
       puts "Пассажирский поезд номер #{number} создан"
     when 2
       cargo_train = CargoTrain.new(number)
-      @trains << cargo_train
+      @@trains << cargo_train
       puts "Грузовой поезд номер #{number} создан"
     else
       print "Error!"
@@ -118,32 +119,37 @@ class Menu
     train = get_train
     print "Введите номер маршрута: "
     route_number = gets.chomp.to_i
-    train.assign_route(@routes[route_number - 1])  # по индексу
+    train.(@routes[route_number - 1])
   end
 
   def get_train  # поиск и вывод поезда
     print "Введите номер поезда: "
     number = gets.chomp
-    @trains.find { |train| train.number == number }
+    @@trains.find { |train| train.number == number }
   end
 
   def all_routes
     puts "Список маршрутов"
     @routes.each_with_index do |route, index|
-      puts "#{index+1}. #{route.first_station} - #{route.last_station}"
+      puts "#{index+1}. #{route.first_station.to_s} - #{route.last_station.to_s}"
     end
   end
 
   def all_trains
     puts "Список поездов"
-    @trains.each { |train| puts train.number}
+    @@trains.each { |train| puts train.number}
+  end
+
+  def all_stations
+    puts "Список поездов"
+    @@stations.each { |station| puts station.name}
   end
 
   def add_wagon
     all_trains
     puts "Введите номер поезда: "
     number = gets.chomp
-    train = @trains.find { |train| train.number == number }
+    train = @@trains.find { |train| train.number == number }
 
     if train.is_a? CargoTrain # принадлежит ли объект к классу или его подклассу? (kind_of, instance_of)
       train.hitch_wagon CargoWagons.new
@@ -158,7 +164,7 @@ class Menu
     all_trains
     puts "Введите номер поезда: "
     number = gets.chomp
-    train = @trains.find { |train| train.number == number }
+    train = @@trains.find { |train| train.number == number }
 
     if train.is_a? CargoTrain
       train.unhitch_wagon CargoWagons.new
@@ -193,6 +199,7 @@ class Menu
   end
 
   def show_station_list_and_trains
+    all_stations
     puts "Введите название станции: "
     name_station = gets.chomp
     current_station = Station.new(name_station)
