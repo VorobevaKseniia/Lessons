@@ -12,7 +12,6 @@ module InstanceCounter
   def self.included(base)  # Метод самого медуля
     base.extend ClassMethods
     base.send :include, InstanceMethods
-    register_instance
   end
 
   module ClassMethods
