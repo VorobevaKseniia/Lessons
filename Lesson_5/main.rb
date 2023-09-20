@@ -11,9 +11,9 @@ require_relative 'wagons'
 class Menu
   attr_accessor :stations, :trains, :routes
   def initialize
-    @@stations ||= []
+    @@stations = []
     @@trains = []
-    @routes ||= []
+    @routes = []
     @wagons = []
   end
 
@@ -65,7 +65,7 @@ class Menu
     name_station = gets.chomp
     new_station = Station.new(name_station)
     @@stations << new_station
-    puts "Станция #{new_station.to_s} создана!"
+    puts "Станция #{new_station} создана!"
   end
 
   def create_train
@@ -94,23 +94,24 @@ class Menu
     last_station = Station.new(gets.chomp)
     new_route = Route.new(first_station,last_station)
     loop do
-    puts "Добавить станцию - 1\n Удалить станцию - 2\n Выход - 0"
-    add_or_delete = gets.chomp.to_i
-    case add_or_delete
-    when 1
-      puts "Введите название станции"
-      station = gets.chomp
-      new_route.add_station Station.new(station)
-    when 2
-      puts "Введите название станции"
-      station = gets.chomp
-      new_route.delete_station Station.new(station)
-    else
-      print "Error!"
-    end
-    break if add_or_delete == 0
+      puts "Добавить станцию - 1\n Удалить станцию - 2\n Выход - 0"
+      add_or_delete = gets.chomp.to_i
+      case add_or_delete
+      when 1
+        puts "Введите название станции"
+        station = gets.chomp
+        new_route.add_station Station.new(station)
+      when 2
+        puts "Введите название станции"
+        station = gets.chomp
+        new_route.delete_station Station.new(station)
+      else
+        print "Error!"
+      end
+      break if add_or_delete == 0
     end
     @routes << new_route
+    @current_station_index = 0
   end
 
   def assign_route

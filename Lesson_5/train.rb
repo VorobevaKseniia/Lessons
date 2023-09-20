@@ -43,9 +43,9 @@ class Train
   end
 
   def assign_route(route)
-    @route = route
-    @current_station_index = 0
-    @route.first_station.add_train(self)
+      @route = route
+      @current_station_index = 0
+      @route.current_station.add_train self
   end
 
   def go_next_station
