@@ -18,15 +18,15 @@ class Station
 
   def add_train(number)
     @trains << number
-    puts "Поезд #{number} добавлен на станцию #{name}!"
+    puts "Поезд добавлен на станцию #{name}!"
   end
 
   def delete_train(number)
     if @trains.include? number
       @trains.delete(number)
-      puts "Поезд #{number} удален со станции #{name}!"
+      puts "Поезд удален со станции #{name}!"
     else
-      puts "Поезда #{number} нет на станции #{name}!"
+      puts "Поезда нет на станции #{name}!"
     end
   end
 

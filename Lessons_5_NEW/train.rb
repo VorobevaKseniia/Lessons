@@ -26,7 +26,7 @@ class Train
     if wagons.any?
       @wagons.delete(wagon) if speed.zero? && wagon.type == type
       puts "Вагон отцеплен!"
-    else
+      elsif
       puts "У этого поезда нет вагонов нет!"
     end
   end
@@ -35,7 +35,7 @@ class Train
     @route = route
     @current_station_index = 0
     route.stations[current_station_index].add_train self
-    puts "Поезд установлен на #{@route.stations[current_station_index]}"
+    puts "Поезд установлен на станцию '#{@route.stations[current_station_index].name}'"
   end
 
   def current_station

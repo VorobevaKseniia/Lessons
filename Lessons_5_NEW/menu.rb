@@ -24,13 +24,11 @@ class Menu
       puts "01. Создать новую станцию"
       puts "02. Создать поезд"
       puts "03. Создать маршрут и управлять станциями в нем (добавлять, удалять)"
-      puts "4.Назначить маршрут поезду"
+      puts "04. Назначить маршрут поезду"
       puts "05. Добавить вагон к поезду"
       puts "06. Отцепить вагон от поезда"
-
-      puts "7.Переместить поезд по маршруту вперед и назад"
-
-      puts "8.Просмотреть список станций и список поездов на станции"
+      puts "07. Переместить поезд по маршруту вперед и назад"
+      puts "08. Просмотреть список станций и список поездов на станции"
       puts "09. Выход"
       puts "10. Отладка"
 
@@ -75,7 +73,7 @@ class Menu
     number = gets.chomp
 
     puts "Укажите тип поезда:"
-    puts "Грузовой - 1\nПассажирский - 2"
+    puts "1 - Грузовой\n2 - Пассажирский"
     type = gets.chomp.to_i
     train = type == 1? CargoTrain.new(number) : PassengerTrain.new(number)
     @trains << train
@@ -85,7 +83,7 @@ class Menu
   def route_acts
     loop do
       puts "Выберите действие:"
-      puts "Создать новый маршрут - 1\nДобавить станцию в маршрут - 2\nУдалить станцию из маршрута - 3\nВыход - 0"
+      puts "1 - Создать новый маршрут\n2 - Добавить станцию в маршрут\n3 - Удалить станцию из маршрута\n0 - Выход"
       choice = gets.chomp.to_i
       case choice
       when 1
@@ -104,11 +102,11 @@ class Menu
 
   def create_route
     puts "Введите начальную станцию:"
-    first_station = gets.chomp
-    @stations << Station.new(first_station)
+    first_station = Station.new(gets.chomp)
+    @stations << first_station
     puts "Введите конечную станцию:"
-    last_station = gets.chomp
-    @stations << Station.new(last_station)
+    last_station = Station.new(gets.chomp)
+    @stations << last_station
     @routes << Route.new(first_station, last_station)
     @current_station_index = 0
   end
@@ -121,7 +119,7 @@ class Menu
     show_stations
     station = @stations[gets.chomp.to_i-1]
     route.add_station(station)
-    puts "Станция #{station.name} добавлена в маршрут #{route.first_station} - #{route.last_station}"
+    puts "Станция #{station.name} добавлена в маршрут #{route.stations[0].name} - #{route.stations[-1].name}"
   end
 
   def delete_station
@@ -132,7 +130,7 @@ class Menu
     show_stations
     station = @stations[gets.chomp.to_i-1]
     route.delete_station(station)
-    puts "Станция #{station.name} удалена из маршрута #{route.first_station} - #{route.last_station}"
+    puts "Станция #{station.name} удалена из маршрута #{route.stations[0].name} - #{route.stations[-1].name}"
   end
 
   def assign_route
@@ -143,7 +141,7 @@ class Menu
     show_routes
     route = @routes[gets.chomp.to_i-1]
     train.add_route(route)
-    puts "Поезду #{train.number} добавлен маршрут #{route.first_station} - #{route.last_station}"
+    puts "Поезду #{train.number} добавлен маршрут #{route.stations[0].name} - #{route.stations[-1].name}"
   end
 
   def add_wagon
@@ -171,10 +169,10 @@ class Menu
     case choice
     when 1
       train.go_next_station
-      puts "Поезд #{train.number} переместился на станцию #{train.current_station}"
+      puts "Поезд #{train.number} переместился на станцию #{train.current_station.name}"
     when 2
       train.go_previous_station
-      puts "Поезд #{train.number} переместился на станцию #{train.current_station}"
+      puts "Поезд #{train.number} переместился на станцию #{train.current_station.name}"
     else
       puts "Такого пункта нет!"
     end
@@ -201,7 +199,7 @@ class Menu
 
   def show_routes
     puts "Список путей:"
-    @routes.each_with_index { |route, index| puts "#{index+1}. #{route.first_station} - #{route.last_station}"}
+    @routes.each_with_index { |route, index| puts "#{index+1}. #{route.stations[0].name} - #{route.stations[-1].name}"}
   end
 
 end
