@@ -15,25 +15,24 @@ class Menu
   def initialize
     @stations = []
     @trains = []
-    @wagons = []
     @routes = []
   end
 
   def open_menu
     loop do
       puts "Выберите пунк от 1 до 10"
-      puts "1 Создать новую станцию"
-      puts "2 Создать поезд"
-      puts "3. Создать маршрут и управлять станциями в нем (добавлять, удалять)"
-      puts "4. Назначить маршрут поезду"
-      puts "5. Добавить вагон к поезду"
-      puts "6. Отцепить вагон от поезда"
+      puts "01. Создать новую станцию"
+      puts "02. Создать поезд"
+      puts "03. Создать маршрут и управлять станциями в нем (добавлять, удалять)"
+      puts "4.Назначить маршрут поезду"
+      puts "05. Добавить вагон к поезду"
+      puts "06. Отцепить вагон от поезда"
 
-      puts "7. Переместить поезд по маршруту вперед и назад"
+      puts "7.Переместить поезд по маршруту вперед и назад"
 
-      puts "8. Просмотреть список станций и список поездов на станции"
-      puts "9 Выход"
-      puts "10 Отладка"
+      puts "8.Просмотреть список станций и список поездов на станции"
+      puts "09. Выход"
+      puts "10. Отладка"
 
       choice = gets.chomp.to_i
       case choice
@@ -150,16 +149,17 @@ class Menu
   def add_wagon
     puts "Выберите порядковый номер поезда, к которому хотите прицепить вагон"
     show_trains
-    number = @trains[gets.chomp.to_i-1]
-    train = @trains.find { |train| train.number == number }
-    train.type == :passenger ? train.hitch_wagon(PassengerWagons.new) :  train.hitch_wagon(CargoWagons.new)
+    number = @trains[gets.chomp.to_i-1].number
+    train = @trains.find { |train| train.number == number}
+    train.type == :passenger ? train.hitch_wagon(PassengerWagons.new) : train.hitch_wagon(CargoWagons.new)
   end
 
   def delete_wagon
     puts "Выберите порядковый номер поезда, от которого хотите отцепить вагон"
     show_trains
-    number = @trains[gets.chomp.to_i-1]
+    number = @trains[gets.chomp.to_i-1].number
     train = @trains.find { |train| train.number == number }
+    train.type == :passenger ? train.unhitch_wagon(PassengerWagons.new) : train.unhitch_wagon(CargoWagons.new)
   end
 
   def move_train
@@ -202,13 +202,6 @@ class Menu
   def show_routes
     puts "Список путей:"
     @routes.each_with_index { |route, index| puts "#{index+1}. #{route.first_station} - #{route.last_station}"}
-  end
-
-  def get_train
-    puts "Выберите порядковый номер поезда, к которому хотите прицепить вагон"
-    show_trains
-    number = @trains[gets.chomp.to_i-1]
-    @trains.find { |train| train.number.type == number }
   end
 
 end

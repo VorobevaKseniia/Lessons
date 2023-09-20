@@ -9,7 +9,7 @@ class Train
   def initialize(number)
     @number = number
     @speed = 0
-    @wagons = 0
+    @wagons = []
     register_instance
   end
 
@@ -23,31 +23,29 @@ class Train
   end
 
   def unhitch_wagon(wagon)
-    if @wagons > 0
-      @wagons.delete(wagon) if wagons > 0 && speed.zero? && wagon.type == type
+    if wagons.any?
+      @wagons.delete(wagon) if speed.zero? && wagon.type == type
       puts "Вагон отцеплен!"
     else
-      puts "Вагонов нет!"
+      puts "У этого поезда нет вагонов нет!"
     end
+  end
+
+  def add_route(route)
+    @route = route
+    @current_station_index = 0
+    route.stations[current_station_index].add_train self
+    puts "Поезд установлен на #{@route.stations[current_station_index]}"
   end
 
   def current_station
     @route.stations[@current_station_index]
   end
 
-  def add_route(route)
-    @route = route
-    @current_station_index = 0
-    @current_station = @route.stations[current_station_index]
-    route.stations[@current_station_index].add_train self
-    puts "Поезд установлен на #{@route.stations[current_station_index]}"
-  end
-
   def go_next_station
-    return unless next_station
-    @current_station.delete_train self
+    current_station.delete_train self
     @current_station_index += 1 if next_station
-    @current_station.add_train self
+    current_station.add_train self
   end
 
   def go_previous_station
