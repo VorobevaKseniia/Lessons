@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manufacturer
   attr_accessor :manufacturer
 
@@ -32,5 +34,13 @@ module InstanceCounter
     def register_instance
       self.class.increase_instances
     end
+  end
+end
+
+module Valid
+  def valid?
+    validate!
+  rescue
+    false
   end
 end
