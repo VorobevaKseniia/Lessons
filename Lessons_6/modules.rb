@@ -11,7 +11,7 @@ end
 module InstanceCounter
   # Чтобы мы могли использовать include InstanceCounter
   # *base -> в качестве аргумента передается класс
-  def self.included(base)  # Метод самого медуля
+  def self.included(base)  # Метод самого модуля
     base.extend ClassMethods
     base.send :include, InstanceMethods
   end
@@ -39,7 +39,7 @@ end
 
 module Valid
   def valid?
-    validate! || validate_!
+    validate!
   rescue
     false
   end

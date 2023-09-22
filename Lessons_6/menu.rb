@@ -83,14 +83,16 @@ class Menu
       number = gets.chomp
       puts "Укажите тип поезда:\n1. Грузовой\n2. Пассажирский"
       type = gets.chomp.to_i
-      train = type == 1? CargoTrain.new(number) : PassengerTrain.new(number)
-      train.validate_!
+      train = CargoTrain.new(number) if type == 1
+      train = PassengerTrain.new(number) if type == 2
       @trains << train
-    rescue => e
+      puts "Поезд #{train.number} типа '#{train.type}' создан!"
+    rescue NoMethodError  #Проверка наличия типа, так как создание начинается в дочернем классе(для инициализации необходим тип)
+      puts "Данные введены не правильно!"
+      retry
+    rescue => e  #Проверяем номер
       puts "#{e.message}"
       retry
-    else
-      puts "Поезд #{train.number} типа '#{train.type}' создан!"
     end
   end
 
