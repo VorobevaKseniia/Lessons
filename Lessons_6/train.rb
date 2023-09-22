@@ -56,13 +56,10 @@ class Train
   end
 
   private
-
   def validate!
-    raise "Номер не может быть пустым!" if number.length < 1
+    raise "Номер не может быть пустым! #{type.inspect}" if number.length < 1
     raise "Номер не совпадает с форматом!" if number !~ STANDARD_NUMBER
-    #raise "Тип поезда не установлен!" if type.nil?
   end
-
   def next_station
     @route.stations[@current_station_index + 1]
   end

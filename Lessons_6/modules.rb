@@ -39,7 +39,7 @@ end
 
 module Valid
   def valid?
-    validate!
+    validate! || validate_!
   rescue
     false
   end

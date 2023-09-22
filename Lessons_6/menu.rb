@@ -84,12 +84,12 @@ class Menu
       puts "Укажите тип поезда:\n1. Грузовой\n2. Пассажирский"
       type = gets.chomp.to_i
       train = type == 1? CargoTrain.new(number) : PassengerTrain.new(number)
+      train.validate_!
       @trains << train
     rescue => e
       puts "#{e.message}"
       retry
     else
-      puts "#{type}"
       puts "Поезд #{train.number} типа '#{train.type}' создан!"
     end
   end
