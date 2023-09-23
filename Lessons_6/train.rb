@@ -57,7 +57,7 @@ class Train
 
   private
   def validate!
-    raise "Номер не может быть пустым!" if number.length < 0
+    raise "Номер не может быть пустым!" if number == ''
     raise "Номер не совпадает с форматом!" if number !~ STANDARD_NUMBER
   end
 
