@@ -22,7 +22,7 @@ class Train
   end
 
   def each_wagon(&block)
-    wagons.each {|wagon| block.call(wagon)}
+    wagons.each_with_index {|wagon, index| block.call(wagon, index)}
   end
 
   def hitch_wagon(wagon)

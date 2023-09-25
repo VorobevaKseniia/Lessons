@@ -301,9 +301,9 @@ class Menu
     train = @trains[gets.chomp.to_i-1]
     puts "Список вагонов:"
     if train.type == :passenger
-      train.each_wagon { |wagon| puts "#{wagon.type}\nКол-во свободных мест: #{wagon.free}\nКол-во занятых мест: #{wagon.occupied}"}
+      train.each_wagon { |wagon, index| puts "#{index+1}. #{wagon.type}\nКол-во свободных мест: #{wagon.free}\nКол-во занятых мест: #{wagon.occupied}"}
     else
-      train.each_wagon { |wagon| puts "#{wagon.type}\nКол-во свободного объёма: #{wagon.free}\nКол-во занятого объёма: #{wagon.occupied}"}
+      train.each_wagon { |wagon, index| puts "#{index+1}. #{wagon.type}\nКол-во свободного объёма: #{wagon.free}\nКол-во занятого объёма: #{wagon.occupied}"}
     end
   end
 
@@ -312,7 +312,7 @@ class Menu
     puts "Выберите порядковый номер вагона"
     wagon = @wagons[gets.chomp.to_i-1]
     if wagon.type == :passenger
-      wagon.occupy_seat if wagon.free !=0
+      wagon.occupy_seat if wagon.free != 0
       puts "Место зарезервировано!"
     else
       puts "Введите объём:"
@@ -340,7 +340,7 @@ class Menu
 
   def all_wagons
     puts "Список вагонов:"
-    @wagons.each_with_index { |wagon, index| puts "#{index+1}. #{wagon.inspect}"}
+    @wagons.each_with_index { |wagon, index| puts "#{index+1}. Тип: #{wagon.type}; Вместимость: #{wagon.seats_volume}"}
   end
 
 end
