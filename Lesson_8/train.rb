@@ -7,7 +7,7 @@ class Train
   include InstanceCounter
   include Valid
 
-  STANDARD_NUMBER = /\A\w{3}-*\w{2}\z/
+  STANDARD_NUMBER = /\A\w{3}-*\w{2}\z/.freeze
 
   attr_reader :number, :type, :route, :stations
   attr_accessor :speed, :wagons, :current_station_index
